@@ -1,0 +1,46 @@
+:root {
+  --paper: #eef1f4;
+  --ink: #14202b;
+  --muted: #5b6b79;
+  --rule: #c9d1d8;
+  --utama: #0f766e;
+  --utama-bg: #d9efec;
+  --cadangan: #9a4a06;
+  --cadangan-bg: #fbe6cc;
+  --gagal: #a12b2b;
+  --gagal-bg: #f6d9d9;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem; }
+h1 { margin: 0; font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+nav { display: flex; gap: .25rem; }
+.tab { font: inherit; background: none; border: 0; border-bottom: 2px solid transparent; padding: .35rem .75rem; color: var(--muted); cursor: pointer; }
+.tab.on { color: var(--ink); border-color: var(--ink); font-weight: 500; }
+button:focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
+
+.banner { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .9rem 1.1rem; border-left: 6px solid var(--muted); background: #fff; margin-bottom: 1.5rem; }
+.banner div { display: flex; flex-direction: column; }
+.banner strong { font-size: 1.1rem; }
+.banner span { color: var(--muted); font-size: .92rem; max-width: 56ch; }
+.banner button { font: inherit; padding: .4rem .9rem; border: 1px solid currentColor; background: transparent; color: inherit; cursor: pointer; white-space: nowrap; }
+.banner button:disabled { opacity: .5; cursor: default; }
+.banner.utama { border-color: var(--utama); background: var(--utama-bg); color: var(--utama); }
+.banner.cadangan { border-color: var(--cadangan); background: var(--cadangan-bg); color: var(--cadangan); }
+.banner.gagal { border-color: var(--gagal); background: var(--gagal-bg); color: var(--gagal); }
+.banner.utama span, .banner.cadangan span, .banner.gagal span { color: var(--ink); }
+
+.table-scroll, table { width: 100%; }
+table { border-collapse: collapse; background: #fff; }
+th, td { text-align: left; padding: .65rem .9rem; border-bottom: 1px solid var(--rule); }
+th { font-weight: 500; color: var(--muted); font-size: .9rem; background: #f7f9fa; }
+td.num { font-variant-numeric: tabular-nums; }
+td.kosong { color: var(--muted); text-align: center; padding: 2rem; }
+@media (max-width: 600px) { section { overflow-x: auto; } table { min-width: 520px; } }
