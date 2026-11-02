@@ -4,6 +4,7 @@ var router = express.Router();
 const Model_Kategori = require('../model/Model_Kategori');
 const Model_Produk = require('../model/Model_Produk');
 const { encrypt } = require('../../crypto');
+const notifTransaksi = require('../config/middleware/notifTransaksi');
  
 // kirim data (sudah terenkripsi) ke Server B
 async function kirimKeServerB(path, body) {
@@ -16,13 +17,12 @@ async function kirimKeServerB(path, body) {
 }
  
 // Langkah 1: ambil dari DB A -> ENCRYPT -> POST ke Server B
-router.post('/', async function (req, res) {
+// notifTransaksi dipasang sebagai middleware: kirim WA setelah response selesai
+router.post('/', notifTransaksi('Sinkronisasi data ke Server B'), async function (req, res) {
   try {
     const kategori = await Model_Kategori.getAll();
     const produk = await Model_Produk.getAll();
  
-    // id & id_kategori dibiarkan plain supaya relasi tetap jalan,
-    // kolom isi data yang dienkripsi
     const kategoriEnc = kategori.map((k) => ({
       id: k.id,
       nama_kategori: encrypt(k.nama_kategori),
@@ -36,7 +36,6 @@ router.post('/', async function (req, res) {
       id_kategori: p.id_kategori,
     }));
  
-    // kategori dulu, baru produk (produk punya FK ke kategori)
     const hasilKategori = await kirimKeServerB('/api/kategori', kategoriEnc);
     if (!hasilKategori.ok) {
       return res.status(502).json({ status: false, message: 'Server B menolak data kategori', detail: hasilKategori.body });
@@ -47,6 +46,9 @@ router.post('/', async function (req, res) {
       return res.status(502).json({ status: false, message: 'Server B menolak data produk', detail: hasilProduk.body });
     }
  
+    // detail tambahan untuk isi pesan WA
+    res.locals.ringkasan = `Kategori: ${kategoriEnc.length} data\nProduk: ${produkEnc.length} data`;
+
     return res.status(200).json({
       status: true,
       message: 'Data terenkripsi berhasil dikirim ke Server B',

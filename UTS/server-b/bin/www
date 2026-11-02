@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 var app = require('../app');
+const { pasangNotifShutdown } = require('../config/middleware/serverMonitor');
 
 var port = process.env.PORT || 4000;
 app.listen(port, function () {
   console.log('Server B jalan di http://localhost:' + port);
+  pasangNotifShutdown('Server B');
 });

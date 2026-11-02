@@ -1,7 +1,16 @@
 #!/usr/bin/env node
 var app = require('../app');
+const { mulaiMonitor, pasangNotifShutdown } = require('../config/middleware/serverMonitor');
 
 var port = process.env.PORT || 3000;
 app.listen(port, function () {
   console.log('Server A jalan di http://localhost:' + port);
+
+  pasangNotifShutdown('Server A');
+
+  // Server A jadi watchdog untuk Server B
+  mulaiMonitor({
+    nama: 'Server B',
+    url: process.env.SERVER_B_URL + '/api/health',
+  });
 });
